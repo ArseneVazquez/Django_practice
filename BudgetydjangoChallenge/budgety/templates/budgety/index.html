@@ -1,0 +1,103 @@
+{% extends "budgety/base.html" %}
+
+{% block title %}
+    Budgety
+{% endblock  %}
+
+
+{% block content_top %}
+    <div class="top">
+        <div class="budget">
+            <div class="budget__title">
+                Available Budget in <span class="budget__title--month">{{ month|title }}</span>:
+            </div>
+
+            <div class="budget__value">{{  total_budget }}</div>
+
+            <div class="budget__income clearfix">
+                <div class="budget__income--text">Income</div>
+                <div class="right">
+                    <div class="budget__income--value">+ {{ total_incomes }}</div>
+                    <div class="budget__income--percentage">&nbsp;</div>
+                </div>
+            </div>
+
+            <div class="budget__expenses clearfix">
+                <div class="budget__expenses--text">Expenses</div>
+                <div class="right clearfix">
+                    <div class="budget__expenses--value">- {{ total_expenses }}</div>
+                    <div class="budget__expenses--percentage">45%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock  %}
+
+{% block content_bottom %}
+    <div class="bottom">
+        <div class="add">
+            <form class="add__container" action="/" method="POST">
+                {% csrf_token %}
+                <select class="add__type" name="sign">
+                    <option value="inc" selected>+</option>
+                    <option value="exp">-</option>
+                </select>
+                <input type="text" class="add__description" name="text" placeholder="Add description">
+                <input type="number" class="add__value" name="number" placeholder="Value">
+                <button class="add__btn"><i class="ion-ios-checkmark-outline"></i></button>
+            </form>
+        </div>
+
+        <div class="container clearfix">
+            <div class="income">
+                <h2 class="income__title">Income</h2>
+
+                <div class="income__list">
+                    {% for description, value  in incomes.items %}
+                    
+                        <div class="item clearfix" id="">
+                            <div class="item__description">{{ description }}</div>
+                            <div class="right clearfix">
+                            <div class="item__value">{{ value }}</div>
+                                <a href="{% url 'delete_income' description=description %}" class="item__delete"> 
+                                    <button class="item__delete--btn">
+                                        <i class="ion-ios-close-outline"></i>
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+ 
+
+
+            <div class="expenses">
+                <h2 class="expenses__title">Expenses</h2>
+
+                <div class="expenses__list">
+                    {% for description, value in expenses.items %}
+                        <div class="item clearfix" id="">
+                            <div class="item__description">{{ description }}</div>
+                            <div class="right clearfix">
+                            <div class="item__value">- {{ value }}</div>
+                            {% comment %} <div class="item__percentage">
+                                100%
+                            </div> {% endcomment %}
+                                <a href="{% url 'delete_expense' description=description %}" class="item__delete"> 
+                                    <button class="item__delete--btn">
+                                        <i class="ion-ios-close-outline"></i>
+                                    </button>
+                                </a>
+                            </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+{% endblock  %}

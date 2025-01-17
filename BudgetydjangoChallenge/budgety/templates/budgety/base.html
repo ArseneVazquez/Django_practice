@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,600" rel="stylesheet" type="text/css">
+        <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
+        <link type="text/css" rel="stylesheet" href="{% static "./budgety/style.css" %}">
+        <title>{% block title %}{% endblock  %}</title>
+
+    </head>
+    <body>
+
+        {% block content_top %}
+        
+        {% endblock  %}
+
+        {% block content_bottom %}
+        
+        {% endblock  %}
+
+        {% comment %} <script src="app.js"></script> {% endcomment %}
+    </body>
+</html>
