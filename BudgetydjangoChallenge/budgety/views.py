@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponseRedirect
+from .models import BudgetModel
 
 from datetime import datetime
 import calendar
@@ -8,31 +9,38 @@ import calendar
 
 # Create your views here.
 
+# a function to get budget and check if it's incomes or expenses
+def typeOfBudget(isPositive):
+    if isPositive:
+        incomes = BudgetModel.objects.filter(value__gt=0)
 
+        return incomes
+    else:
+        depenses = BudgetModel.objects.filter(value__lte=0)
 
-incomes = {}
-expenses = {}
+        return depenses
+
+# A class to save to the Model and get data to the Model
 
 class IndexView(View):
 
+
     def get(self, request):
 
-        total_expenses = sum(list(expenses.values()))
-        total_income = sum(list(incomes.values()))
+        incomes = typeOfBudget(True)
+        expenses = typeOfBudget(False)
 
-        total_budget = total_income - total_expenses
+        budget_model = list(BudgetModel.objects.all())
+        total_budget = sum(budget.value for budget in budget_model)
         month_number = datetime.today().month
         month = calendar.month_name[month_number]
-
-        # if total_expenses > total_income:
-        #     total_budget = total_budget * (-1)
 
         return render(request, "budgety/index.html",{
             "incomes": incomes,
             "expenses": expenses,
             "total_budget": total_budget,
-            "total_incomes": sum(incomes.values()),
-            "total_expenses" : sum(expenses.values()),
+            "total_incomes": sum(list(income.value for income in incomes)),
+            "total_expenses" : sum(list(expense.value for expense in expenses)),
             "month": month
         })
 
@@ -41,41 +49,18 @@ class IndexView(View):
             text = request.POST.get("text")
             number = float(request.POST.get("number"))
 
-            if request.POST.get("sign") == "inc":
-                incomes[text] = number
-            else:
-                expenses[text] = number
+            if request.POST.get("sign") == "exp":
+                number *= -1
+
+            BudgetModel(description=text, value=number).save()
 
             return HttpResponseRedirect("/")
         
 
 
-def index(request):
-
-    if request.method == "POST":
-        text = request.POST.get("text")
-        number = request.POST.get("number")
-
-        if request.POST.get("sign") == "+":
-            incomes[text] = number
-        else:
-            expenses[text] = number
-
-        return render(request, "budgety/index.html",{
-            "incomes": incomes,
-            "expenses": expenses
-        })
+# A function to delete a Data
     
-def delete(desc, the_list):
-    if desc in the_list:
-        del the_list[desc]
-    return the_list
-    
-def deleteIncomeData(request, description):
-    delete(description, incomes)
-    return HttpResponseRedirect("/")
-
-def deleteExpenseData(request, description):
-    delete(description, expenses)
+def deleteData(request, pk):
+    BudgetModel.objects.get(pk=pk).delete()
     return HttpResponseRedirect("/")
     

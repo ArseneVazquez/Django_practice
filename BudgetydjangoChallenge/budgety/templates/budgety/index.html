@@ -25,7 +25,7 @@
             <div class="budget__expenses clearfix">
                 <div class="budget__expenses--text">Expenses</div>
                 <div class="right clearfix">
-                    <div class="budget__expenses--value">- {{ total_expenses }}</div>
+                    <div class="budget__expenses--value"> {{ total_expenses }}</div>
                     <div class="budget__expenses--percentage">45%</div>
                 </div>
             </div>
@@ -53,13 +53,13 @@
                 <h2 class="income__title">Income</h2>
 
                 <div class="income__list">
-                    {% for description, value  in incomes.items %}
+                    {% for income  in incomes %}
                     
                         <div class="item clearfix" id="">
-                            <div class="item__description">{{ description }}</div>
+                            <div class="item__description">{{ income.description }}</div>
                             <div class="right clearfix">
-                            <div class="item__value">{{ value }}</div>
-                                <a href="{% url 'delete_income' description=description %}" class="item__delete"> 
+                            <div class="item__value">{{ income.value }}</div>
+                                <a href="{% url 'delete' pk=income.id %}" class="item__delete"> 
                                     <button class="item__delete--btn">
                                         <i class="ion-ios-close-outline"></i>
                                     </button>
@@ -76,15 +76,15 @@
                 <h2 class="expenses__title">Expenses</h2>
 
                 <div class="expenses__list">
-                    {% for description, value in expenses.items %}
+                    {% for expense in expenses %}
                         <div class="item clearfix" id="">
-                            <div class="item__description">{{ description }}</div>
+                            <div class="item__description">{{ expense.description }}</div>
                             <div class="right clearfix">
-                            <div class="item__value">- {{ value }}</div>
+                            <div class="item__value"> {{ expense.value }}</div>
                             {% comment %} <div class="item__percentage">
                                 100%
                             </div> {% endcomment %}
-                                <a href="{% url 'delete_expense' description=description %}" class="item__delete"> 
+                                <a href="{% url 'delete' pk=expense.id %}" class="item__delete"> 
                                     <button class="item__delete--btn">
                                         <i class="ion-ios-close-outline"></i>
                                     </button>

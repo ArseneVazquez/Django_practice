@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path("", views.IndexView.as_view()),
-    path("delete_income/<str:description>/", views.deleteIncomeData, name="delete_income"),
-    path("delete_expense/<str:description>/", views.deleteExpenseData, name="delete_expense")
+    # path("delete_income/<str:description>/", views.deleteIncomeData, name="delete_income"),
+    path("delete/<int:pk>/", views.deleteData, name="delete")
 ]
  
